@@ -160,12 +160,12 @@
 
   "Outputs" : {
     "VpcId" : {
-      "Description": "VPC",
+      "Description": "VPC ID",
       "Value": { "Ref" : "VPC" },
       "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-VpcID" }}
     },
 
-    "PublicSubnets" : {
+    "PublicSubnet" : {
       "Description" : "Public subnet",
       "Value" : { "Ref" : "PublicSubnet" },
       "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-SubnetID" }}
@@ -175,11 +175,6 @@
       "Description": "SecurityGroup",
       "Value": { "Fn::GetAtt" : ["SecurityGroup", "GroupId"] },
       "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-SecurityGroupID" }}
-    },
-    "GatewayToInternet" : {
-      "Description": "GatewayToInternet",
-      "Value": { "Ref" : "GatewayToInternet" },
-      "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-GatewayToInternetID" }}
     }
   }
 }

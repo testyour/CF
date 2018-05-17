@@ -14,42 +14,31 @@
       "Description": "Instance type",
       "Type": "String",
       "Default": "t2.micro"
+    },
+    "NetworkStackName":{
+      "Type": "String",
     }
   },
   "Mappings": {
     "AWSAMI": {
-      "us-east-1": {
-        "AmiId": "ami-467ca739"
-      }
+      "us-east-1": {"AmiId": "ami-467ca739"}
     }
   },
   "Resources": {
     "Instance": {
       "Type": "AWS::EC2::Instance",
       "Properties": {
-        "InstanceType": {
-          "Ref": "InstanceType"
-        },
-        "KeyName": {
-          "Ref": "KeyName"
-        },
+        "InstanceType": {"Ref": "InstanceType"},
+        "KeyName": {"Ref": "KeyName"},
         "SourceDestCheck": "false",
-        "ImageId": {
-          "Fn::FindInMap": [
-            "AWSAMI",
-            {
-              "Ref": "AWS::Region"
-            },
-            "AmiId"
-          ]
-        },
+        "ImageId": {"Fn::FindInMap": ["AWSAMI",{"Ref": "AWS::Region"},"AmiId"]},
         "NetworkInterfaces": [
           {
-            "GroupSet" : [{"Fn::ImportValue" : {"Fn::Sub" : "${Network}-SecurityGroupID"}}],
+            "GroupSet" : [{"Fn::ImportValue" : {"Fn::Sub" : "${NetworkStackName}-SecurityGroupID"}}],
             "AssociatePublicIpAddress": "true",
             "DeviceIndex": "0",
             "DeleteOnTermination": "true",
-            "SubnetId" : {"Fn::ImportValue" : {"Fn::Sub" : "${Network}-SubnetID"}}
+            "SubnetId" : {"Fn::ImportValue" : {"Fn::Sub" : "${NetworkStackName}-SubnetID"}}
           }
         ],
         "Tags": [
