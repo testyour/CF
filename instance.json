@@ -1,0 +1,64 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Instance",
+  "Parameters": {
+    "KeyName": {
+      "Description": "Name of an existing EC2 KeyPair to enable SSH access",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "64",
+      "AllowedPattern": "[-_ a-zA-Z0-9]*",
+      "ConstraintDescription": "can contain only alphanumeric characters, spaces, dashes and underscores."
+    },
+    "InstanceType": {
+      "Description": "Instance type",
+      "Type": "String",
+      "Default": "t2.micro"
+    }
+  },
+  "Mappings": {
+    "AWSAMI": {
+      "us-east-1": {
+        "AmiId": "ami-467ca739"
+      }
+    }
+  },
+  "Resources": {
+    "Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": {
+          "Ref": "InstanceType"
+        },
+        "KeyName": {
+          "Ref": "KeyName"
+        },
+        "SourceDestCheck": "false",
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSAMI",
+            {
+              "Ref": "AWS::Region"
+            },
+            "AmiId"
+          ]
+        },
+        "NetworkInterfaces": [
+          {
+            "GroupSet" : [{"Fn::ImportValue" : {"Fn::Sub" : "${Network}-SecurityGroupID"}}],
+            "AssociatePublicIpAddress": "true",
+            "DeviceIndex": "0",
+            "DeleteOnTermination": "true",
+            "SubnetId" : {"Fn::ImportValue" : {"Fn::Sub" : "${Network}-SubnetID"}}
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Instance"
+          }
+        ]
+      }
+    }
+  }
+}
