@@ -25,7 +25,6 @@
     }
   },
 
-  },
   "Mappings": {
     "AWSAMI": {
       "us-east-1": {"AmiId": "ami-467ca739"}
